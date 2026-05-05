@@ -1,14 +1,26 @@
-import uuid
+from typing import Optional
+from uuid import UUID
 from pydantic import BaseModel
-from sqlalchemy import text
-import datetime
+from datetime import datetime
+from typing import Optional
 
 
-class Journal_entry(BaseModel):
-    id: uuid
-    user_id: uuid
-    entry_date: datetime
-    body: text
+class JournalEntry(BaseModel):
+    body: str
     mood: str
-    mood_score: int
+    entry_date: datetime
     
+class CreateJournalEntry(JournalEntry):
+    user_id: UUID
+
+class UpdateJournalEntry(JournalEntry):
+    body: Optional[str] = None
+    mood: Optional[str] = None
+
+class JournalEntryResponse(JournalEntry):
+    id: UUID
+    user_id: UUID
+    update_date: datetime
+
+    class Config:
+        from_attributes = True
