@@ -11,23 +11,12 @@ server = os.getenv("DB_SERVER")
 database = os.getenv("DB_NAME")
 driver = os.getenv("DB_DRIVER")
 
-params = urllib.parse.quote_plus(
-    f"DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes;TrustServerCertificate=yes;"
-)
 
-DATABASE_URL = f"mssql+pyodbc:///?odbc_connect={params}"
+DATABASE_URL = f"mssql+pyodbc://{server}/{database}?Trusted_Connection=yes&driver={urllib.parse.quote_plus(driver)}"
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 class User(Base):
     __tablename__ = "users"
@@ -106,3 +95,10 @@ class Event(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

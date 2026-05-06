@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 
+from routers import api_router
+
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/", tags=["Health Check"])
+def root():
+    return {
+        "message": "Welcome to the OpusDoc API"
+    }
+
+app.include_router(api_router)
