@@ -1,5 +1,5 @@
 from datetime import date
-import uuid
+from uuid import UUID
 from pydantic import BaseModel
 from typing import Optional
 
@@ -22,8 +22,8 @@ class UpdateGoal(BaseModel):
     status: Optional[bool] = None
 
 class GoalResponse(Goal):
-    id: uuid
-    user_id: uuid
+    id: UUID
+    user_id: UUID
 
     class Config:
         from_attributes = True
