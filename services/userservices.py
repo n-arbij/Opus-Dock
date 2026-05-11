@@ -1,34 +1,36 @@
 from sqlalchemy.orm import Session
-from database import User
-from uuid import UUID
-
+from models import User
 
 class UserService:
-    def __init__ (self, db: Session):
+    def __init__(self, db: Session):
         self.db = db
 
-    def create_user(self, CreateUser):
-        new_user = CreateUser(**CreateUser.dict())
+    def create_user(self, name: str, email: str, timezone: str = None, created_at=None):
+        new_user = User(name=name, email=email, timezone=timezone, created_at=created_at)
         self.db.add(new_user)
         self.db.commit()
         self.db.refresh(new_user)
         return new_user
-    
-    def update_user(self, user_id: UUID, UpdateUser):
+
+    def update_user(self, user_id, name=None, email=None, timezone=None):
         user = self.db.query(User).filter(User.id == user_id).first()
         if not user:
             return None
-        for key, value in UpdateUser.dict().items():
-            setattr(user, key, value)
+        if name is not None:
+            user.name = name
+        if email is not None:
+            user.email = email
+        if timezone is not None:
+            user.timezone = timezone
         self.db.commit()
         self.db.refresh(user)
         return user
-    
-    def get_user(self, user_id: UUID):
+
+    def get_user_by_id(self, user_id):
         return self.db.query(User).filter(User.id == user_id).first()
-    
-    def delete_user(self, user_id: UUID):
-        user = self.db.query(User).filter(User.id == user_id).first()
+
+    def delete_user(self, user_id):
+        user = self.get_user_by_id(user_id)
         if not user:
             return None
         self.db.delete(user)

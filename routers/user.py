@@ -4,7 +4,7 @@ from models.user import CreateUser, UserResponse, UpdateUser
 from uuid import UUID
 from services.userservices import UserService
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 route = APIRouter(prefix="/users", tags=["users"])
@@ -16,7 +16,7 @@ async def register_user(user: CreateUser, db: Session = Depends(get_db)):
         name = user.name,
         email = user.email,
         timezone = user.timezone,
-        created_at = datetime.now()
+        created_at = datetime.now(timezone.utc)
     )
 
 @route.put("/{user_id}", response_model=UserResponse)
