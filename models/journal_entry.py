@@ -1,25 +1,38 @@
+from sqlalchemy import Column, Integer, String, DateTime
 from typing import Optional
 from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
+from database import Base
 from typing import Optional
 
 
-class JournalEntry(BaseModel):
+class JournalEntry(Base):
+    __tablename__ = 'journal_entries'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    body = Column(String, nullable=False)
+    mood = Column(String, nullable=False)
+    entry_date = Column(DateTime, nullable=False)
+    update_date = Column(DateTime, nullable=True)
+
+class CreateJournalEntry(BaseModel):
+    user_id: int
     body: str
     mood: str
     entry_date: datetime
-    
-class CreateJournalEntry(JournalEntry):
-    user_id: UUID
 
-class UpdateJournalEntry(JournalEntry):
+class UpdateJournalEntry(BaseModel):
     body: Optional[str] = None
     mood: Optional[str] = None
+    update_date: datetime
 
-class JournalEntryResponse(JournalEntry):
-    id: UUID
-    user_id: UUID
+class JournalEntryResponse(BaseModel):
+    id: int
+    user_id: int
+    body: str
+    mood: str
+    entry_date: datetime
     update_date: datetime
 
     class Config:
