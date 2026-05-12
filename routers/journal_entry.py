@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from database import get_db
+from dependency import get_current_user_id
 from models.journal_entry import CreateJournalEntry, JournalEntryResponse, UpdateJournalEntry
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
@@ -8,13 +9,11 @@ from services.journal_entryservice import JournalEntryService
 router = APIRouter(prefix="/journal_entries", tags=["journal_entries"])
 
 @router.post("/", response_model=JournalEntryResponse)
-async def create_journal_entry(jornal_entry: CreateJournalEntry, db: Session = Depends(get_db)):
+async def create_journal_entry(journal_entry: CreateJournalEntry, db: Session = Depends(get_db), current_user_id: int = Depends(get_current_user_id)):
     service = JournalEntryService(db)
     return service.create_journal_entry(
-        user_id = jornal_entry.user_id,
-        body = jornal_entry.body,
-        mood = jornal_entry.mood,
-        entry_date = datetime.now(timezone.utc)
+        journal_entry = journal_entry,
+        current_user_id = current_user_id
     )
 
 @router.get("/{entry_id}", response_model=JournalEntryResponse)

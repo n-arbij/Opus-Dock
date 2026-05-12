@@ -17,7 +17,6 @@ class JournalEntry(Base):
     update_date = Column(DateTime, nullable=True)
 
 class CreateJournalEntry(BaseModel):
-    user_id: int
     body: str
     mood: str
     entry_date: datetime
