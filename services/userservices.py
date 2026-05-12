@@ -5,8 +5,8 @@ class UserService:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_user(self, name: str, email: str, timezone: str = None, created_at=None):
-        new_user = User(name=name, email=email, timezone=timezone, created_at=created_at)
+    def create_user(self, name: str, email: str, hashed_password: str, timezone: str = None, created_at=None):
+        new_user = User(name=name, email=email, hashed_password=hashed_password, timezone=timezone, created_at=created_at)
         self.db.add(new_user)
         self.db.commit()
         self.db.refresh(new_user)
@@ -28,6 +28,9 @@ class UserService:
 
     def get_user_by_id(self, user_id):
         return self.db.query(User).filter(User.id == user_id).first()
+    
+    def get_user_by_email(self, email):
+        return self.db.query(User).filter(User.email == email).first()
 
     def delete_user(self, user_id):
         user = self.get_user_by_id(user_id)

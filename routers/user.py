@@ -9,16 +9,6 @@ from datetime import datetime, timezone
 
 route = APIRouter(prefix="/users", tags=["users"])
 
-@route.post("/register", response_model=UserResponse)
-async def register_user(user: CreateUser, db: Session = Depends(get_db)):
-    service = UserService(db)
-    return service.create_user(
-        name = user.name,
-        email = user.email,
-        timezone = user.timezone,
-        created_at = datetime.now(timezone.utc)
-    )
-
 @route.put("/{user_id}", response_model=UserResponse)
 async def update_user(user_id: UUID, user: UpdateUser, db: Session = Depends(get_db)):
     service = UserService(db)
@@ -27,6 +17,7 @@ async def update_user(user_id: UUID, user: UpdateUser, db: Session = Depends(get
         user_id = user_id,
         name = user.name,
         email = user.email,
+        password = user.password,
         timezone = user.timezone
     )
 

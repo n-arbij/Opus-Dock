@@ -5,3 +5,5 @@ dotenv
 pymysql
 pydantic[email]
 passlib[bcrypt]
+pwdlib
+pyjwt
