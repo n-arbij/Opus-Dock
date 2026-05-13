@@ -1,25 +1,31 @@
-from uuid import UUID
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+# from typing import Optional
+from sqlalchemy import Boolean, String, Column, Integer, DateTime
+from database import Base
 
 
-class HabitLog(BaseModel):
+class HabitLog(Base):
+    __tablename__ = "habit_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    habit_id = Column(Integer, nullable=False)
+    entry_date = Column(DateTime, nullable=False)
+    completed = Column(Boolean, default=False)
+
+class CreateHabitLog(BaseModel):
+    habit_id: int
     entry_date: date
-    count: int
-    note: Optional[str] = None
+    completed: bool = False
 
-class CreateHabitLog(HabitLog):
-    habit_id: UUID
+# class UpdateHabitLog(BaseModel):
+#     entry_date: Optional[date] = None
+#     completed: Optional[bool] = None
 
-class UpdateHabitLog(BaseModel):
-    entry_date: Optional[date] = None
-    count: Optional[int] = None
-    note: Optional[str] = None
+class HabitLogResponse(BaseModel):
+    id: int
+    habit_id: int
+    entry_date: DateTime
+    completed: bool = False
 
-class HabitLogResponse(HabitLog):
-    id: UUID
-    habit_id: UUID
-    
     class Config:
         from_attributes = True

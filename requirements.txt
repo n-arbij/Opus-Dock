@@ -1,9 +1,8 @@
 fastapi
 uvicorn[standard]
-sqlalchemy[standard]
+sqlalchemy
 dotenv
 pymysql
-pydantic[email]
-passlib[bcrypt]
 pwdlib
 pyjwt
+apscheduler
