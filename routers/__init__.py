@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from routers import auth, user as user_router
 from routers import journal_entry as journal_entry_router
+from routers import event as event_router
 from dependency import get_current_user
 
 api_router = APIRouter(dependencies=[Depends(get_current_user)])
@@ -10,5 +11,6 @@ public_router.include_router(auth.route)
 
 api_router.include_router(user_router.route)
 api_router.include_router(journal_entry_router.router)
+api_router.include_router(event_router.route)
 
 __all__ = ["api_router"]
